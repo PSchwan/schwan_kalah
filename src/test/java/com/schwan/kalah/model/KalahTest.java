@@ -1,4 +1,5 @@
 package com.schwan.kalah.model;
+
 import com.schwan.kalah.exception.InvalidMoveException;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class KalahTest {
     @Test
     public void sow_throwsExceptionWithAMinusPitNumber() throws Exception {
         try {
-            kalah.sow(0, -1);
+            kalah.sow(kalah.getPlayerOne(), -1);
             fail("Expected an exception to be thrown on the last line");
         } catch (InvalidMoveException e) {
             assertEquals("Cannot sow with a pit of [-1]", e.getMessage());
@@ -56,7 +57,7 @@ public class KalahTest {
     @Test
     public void sow_throwsExceptionWithAHighPitNumber() throws Exception {
         try {
-            kalah.sow(0, 10);
+            kalah.sow(kalah.getPlayerOne(), 10);
             fail("Expected an exception to be thrown on the last line");
         } catch (InvalidMoveException e) {
             assertEquals("Cannot sow with a pit of [10]", e.getMessage());
@@ -65,7 +66,7 @@ public class KalahTest {
 
     @Test
     public void sow_worksWithTheFirstPit() throws Exception {
-        kalah.sow(0, 1);
+        kalah.sow(kalah.getPlayerOne(), 1);
 
         System.out.println(kalah.printBoard());
 
@@ -92,7 +93,7 @@ public class KalahTest {
 
     @Test
     public void sow_worksWithTheLastPit() throws Exception {
-        kalah.sow(0, 5);
+        kalah.sow(kalah.getPlayerOne(), 5);
 
         System.out.println(kalah.printBoard());
 
@@ -119,7 +120,7 @@ public class KalahTest {
 
     @Test
     public void sow_worksForPlayerTwo() throws Exception {
-        kalah.sow(1, 5);
+        kalah.sow(kalah.getPlayerTwo(), 5);
 
         System.out.println(kalah.printBoard());
 
@@ -149,7 +150,7 @@ public class KalahTest {
     public void sow_worksWhenPlacingLoadsOfStones() throws Exception {
 
         kalah.player1.pits[1] = 20;
-        kalah.sow(0, 1);
+        kalah.sow(kalah.getPlayerOne(), 1);
 
         System.out.println(kalah.printBoard());
 
@@ -183,7 +184,7 @@ public class KalahTest {
         kalah.player2.pits[3] = 2;
         kalah.player2.pits[4] = 3;
         kalah.player2.pits[5] = 0;
-        kalah.sow(1, 2);
+        kalah.sow(kalah.getPlayerTwo(), 2);
 
         System.out.println(kalah.printBoard());
 
@@ -210,7 +211,7 @@ public class KalahTest {
     }
 
     @Test
-    public void sow_worksCorrectlyWhenPlayerFinishesInAOpponentsEmptyPit() throws Exception  {
+    public void sow_worksCorrectlyWhenPlayerFinishesInAOpponentsEmptyPit() throws Exception {
 
         kalah.player1.pits[0] = 1;
         kalah.player1.pits[1] = 4;
@@ -225,7 +226,7 @@ public class KalahTest {
         kalah.player2.pits[3] = 2;
         kalah.player2.pits[4] = 3;
         kalah.player2.pits[5] = 0;
-        kalah.sow(0, 1);
+        kalah.sow(kalah.getPlayerOne(), 1);
 
         System.out.println(kalah.printBoard());
 
@@ -248,6 +249,96 @@ public class KalahTest {
         assertEquals(2, playerTwoPits[3].intValue());
         assertEquals(3, playerTwoPits[4].intValue());
         assertEquals(0, playerTwoPits[5].intValue());
+
+    }
+
+    @Test
+    public void sow_handlesSelectingAnEmptyPitCorrectly() throws Exception {
+
+        kalah.player1.pits[0] = 1;
+        kalah.player1.pits[1] = 3;
+        kalah.player1.pits[2] = 4;
+        kalah.player1.pits[3] = 2;
+        kalah.player1.pits[4] = 0;
+        kalah.player1.pits[5] = 1;
+
+        kalah.player2.pits[0] = 2;
+        kalah.player2.pits[1] = 3;
+        kalah.player2.pits[2] = 1;
+        kalah.player2.pits[3] = 2;
+        kalah.player2.pits[4] = 3;
+        kalah.player2.pits[5] = 5;
+        kalah.sow(kalah.getPlayerOne(), 4);
+
+        System.out.println(kalah.printBoard());
+
+        Integer[] playerOnePits = kalah.getPlayerOne().getPits();
+        assertEquals(0, kalah.getPlayerOne().getKalah());
+        assertEquals(6, playerOnePits.length);
+        assertEquals(1, playerOnePits[0].intValue());
+        assertEquals(3, playerOnePits[1].intValue());
+        assertEquals(4, playerOnePits[2].intValue());
+        assertEquals(2, playerOnePits[3].intValue());
+        assertEquals(0, playerOnePits[4].intValue());
+        assertEquals(1, playerOnePits[5].intValue());
+
+        Integer[] playerTwoPits = kalah.getPlayerTwo().getPits();
+        assertEquals(0, kalah.getPlayerTwo().getKalah());
+        assertEquals(6, playerTwoPits.length);
+        assertEquals(2, playerTwoPits[0].intValue());
+        assertEquals(3, playerTwoPits[1].intValue());
+        assertEquals(1, playerTwoPits[2].intValue());
+        assertEquals(2, playerTwoPits[3].intValue());
+        assertEquals(3, playerTwoPits[4].intValue());
+        assertEquals(5, playerTwoPits[5].intValue());
+
+
+    }
+
+    /**
+     * Wondered about an edge case where you select an empty pit next to a pit with only 1 seed in it - would the
+     * program think you'd finished in an empty pit and added an single seed, rather than a pit with one seed and
+     * added nothing?
+     */
+    @Test
+    public void sow_handlesSelectingAnEmptyPitCorrectly_edgeCaseWithAnotherNearEmptyPit() throws Exception {
+
+        kalah.player1.pits[0] = 1;
+        kalah.player1.pits[1] = 1;
+        kalah.player1.pits[2] = 1;
+        kalah.player1.pits[3] = 1;
+        kalah.player1.pits[4] = 0;
+        kalah.player1.pits[5] = 1;
+
+        kalah.player2.pits[0] = 5;
+        kalah.player2.pits[1] = 5;
+        kalah.player2.pits[2] = 5;
+        kalah.player2.pits[3] = 5;
+        kalah.player2.pits[4] = 5;
+        kalah.player2.pits[5] = 5;
+        kalah.sow(kalah.getPlayerOne(), 4);
+
+        System.out.println(kalah.printBoard());
+
+        Integer[] playerOnePits = kalah.getPlayerOne().getPits();
+        assertEquals(0, kalah.getPlayerOne().getKalah());
+        assertEquals(6, playerOnePits.length);
+        assertEquals(1, playerOnePits[0].intValue());
+        assertEquals(1, playerOnePits[1].intValue());
+        assertEquals(1, playerOnePits[2].intValue());
+        assertEquals(1, playerOnePits[3].intValue());
+        assertEquals(0, playerOnePits[4].intValue());
+        assertEquals(1, playerOnePits[5].intValue());
+
+        Integer[] playerTwoPits = kalah.getPlayerTwo().getPits();
+        assertEquals(0, kalah.getPlayerTwo().getKalah());
+        assertEquals(6, playerTwoPits.length);
+        assertEquals(5, playerTwoPits[0].intValue());
+        assertEquals(5, playerTwoPits[1].intValue());
+        assertEquals(5, playerTwoPits[2].intValue());
+        assertEquals(5, playerTwoPits[3].intValue());
+        assertEquals(5, playerTwoPits[4].intValue());
+        assertEquals(5, playerTwoPits[5].intValue());
 
     }
 
@@ -290,14 +381,14 @@ public class KalahTest {
     }
 
     @Test
-    public void play_swapsActivePlayerAfterATurn_1to2() throws Exception  {
+    public void play_swapsActivePlayerAfterATurn_1to2() throws Exception {
         kalah.whosTurn = kalah.player1;
         assertFalse(kalah.play(3));
         assertEquals(kalah.player2, kalah.whosTurn);
     }
 
     @Test
-    public void play_swapsActivePlayerAfterATurn_2to1() throws Exception  {
+    public void play_swapsActivePlayerAfterATurn_2to1() throws Exception {
         kalah.whosTurn = kalah.player2;
         assertFalse(kalah.play(3));
         assertEquals(kalah.player1, kalah.whosTurn);
@@ -349,7 +440,7 @@ public class KalahTest {
         assertFalse(kalah.play(0));
         assertFalse(kalah.play(0));
 
-        assertTrue(kalah.play(2)); // finally the game ends (hence true instead of false
+        assertTrue(kalah.play(2)); // finally the game ends (hence true instead of false)
 
         System.out.println(kalah.printBoard());
 
@@ -372,6 +463,7 @@ public class KalahTest {
         assertEquals(0, playerTwoPits[3].intValue());
         assertEquals(0, playerTwoPits[4].intValue());
         assertEquals(0, playerTwoPits[5].intValue());
+
         assertEquals(kalah.getPlayerTwo(), kalah.getWinner()); // player two wins!
     }
 

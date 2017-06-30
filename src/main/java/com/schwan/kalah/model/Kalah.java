@@ -51,67 +51,7 @@ public class Kalah {
         }
     }
 
-    public void sow(Player player, int pitToSow) throws InvalidMoveException {
-        if (player.equals(player1)) {
-            sow(0, pitToSow);
-        } else if (player.equals(player2)) {
-            sow(1, pitToSow);
-        }
-    }
-
-    public void sow(int playerNumber, int pitToSow) throws InvalidMoveException { // TODO: refactor this into the overloaded method above to make it neater!
-
-        if (pitToSow < 0 || pitToSow >= NUMBER_OF_PITS) {
-            throw new InvalidMoveException("Cannot sow with a pit of [" + pitToSow + "]");
-        }
-
-        Player playerWhosTurnItIs;
-        Player activePlayer;
-        Player otherPlayer;
-
-        if (playerNumber == 0) {
-            playerWhosTurnItIs = player1;
-            activePlayer = player1;
-            otherPlayer = player2;
-        } else if (playerNumber == 1) {
-            playerWhosTurnItIs = player2;
-            activePlayer = player2;
-            otherPlayer = player1;
-        } else {
-            throw new InvalidMoveException("Invalid player selected");
-        }
-
-
-        logger.info(playerWhosTurnItIs.getName() + " chose to sow at position " + pitToSow);
-
-        playerWhosTurnItIs.sow(pitToSow);
-        while (playerWhosTurnItIs.getUnassignedStones() > 0) {
-            playerWhosTurnItIs.removeUnassignedStones(otherPlayer.placeStones(playerWhosTurnItIs.getUnassignedStones(), otherPlayer.movingForward() ? 0 : NUMBER_OF_PITS - 1, playerWhosTurnItIs.equals(otherPlayer)));
-
-            if (activePlayer.equals(player1)) {
-                activePlayer = player2;
-                otherPlayer = player1;
-            } else {
-                activePlayer = player1;
-                otherPlayer = player2;
-            }
-        }
-
-        if (playerWhosTurnItIs.equals(activePlayer)) {
-            if (playerWhosTurnItIs.lastSeedPlacedInEmptyPit()) {
-                logger.info("Seed left in empty pit[" + playerWhosTurnItIs.pitLastSeedPlacedIn() + "]: moving " + activePlayer.getName() + "'s " + activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] + " seeds and " + otherPlayer.getName() + "'s " + otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] + " seeds to " + activePlayer.getName() + "'s Kalah");
-
-                activePlayer.kalah += activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()];
-                activePlayer.kalah += otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()];
-                activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] = 0;
-                otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] = 0;
-            }
-        }
-
-
-    }
-
-    public boolean play(String original) throws  InvalidMoveException {
+    public boolean play(String original) throws InvalidMoveException {
         try {
             int pitToSow = Integer.parseInt(original);
             return play(pitToSow);
@@ -143,17 +83,63 @@ public class Kalah {
 
     }
 
-    public boolean gameOver() {
-        return player1.finished() || player2.finished();
-    }
+    public void sow(Player player, int pitToSow) throws InvalidMoveException {
 
-    public void switchPlayer() {
-        if (whosTurn.equals(player1)) {
-            whosTurn = player2;
-        } else {
-            whosTurn = player1;
+        Player playerWhosTurnItIs;
+        Player activePlayer;
+        Player otherPlayer;
+
+        if (pitToSow < 0 || pitToSow >= NUMBER_OF_PITS) {
+            throw new InvalidMoveException("Cannot sow with a pit of [" + pitToSow + "]");
         }
 
+        if (player == player1) {
+            playerWhosTurnItIs = player1;
+            activePlayer = player1;
+            otherPlayer = player2;
+        } else if (player == player2) {
+            playerWhosTurnItIs = player2;
+            activePlayer = player2;
+            otherPlayer = player1;
+        } else {
+            throw new InvalidMoveException("Invalid player selected");
+        }
+
+        logger.info(playerWhosTurnItIs.getName() + " chose to sow at position " + pitToSow);
+
+        playerWhosTurnItIs.sow(pitToSow);
+        while (playerWhosTurnItIs.getUnassignedStones() > 0) {
+            playerWhosTurnItIs.removeUnassignedStones(otherPlayer.placeStones(playerWhosTurnItIs.getUnassignedStones(), otherPlayer.movingForward() ? 0 : NUMBER_OF_PITS - 1, playerWhosTurnItIs.equals(otherPlayer)));
+
+            if (activePlayer.equals(player1)) {
+                activePlayer = player2;
+                otherPlayer = player1;
+            } else {
+                activePlayer = player1;
+                otherPlayer = player2;
+            }
+        }
+
+        if (playerWhosTurnItIs.equals(activePlayer)) {
+            if (playerWhosTurnItIs.lastSeedPlacedInEmptyPit()) {
+
+                logger.info("Seed left in empty pit[" + playerWhosTurnItIs.pitLastSeedPlacedIn() +
+                        "]: moving " + activePlayer.getName() + "'s " + activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] +
+                        " seeds and " + otherPlayer.getName() + "'s " + otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] +
+                        " seeds to " + activePlayer.getName() + "'s Kalah");
+
+                activePlayer.kalah += activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()];
+                activePlayer.kalah += otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()];
+                activePlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] = 0;
+                otherPlayer.pits[playerWhosTurnItIs.pitLastSeedPlacedIn()] = 0;
+            }
+        }
+
+
+    }
+
+    public boolean gameOver() {
+        return player1.finished() || player2.finished();
     }
 
     public Player getWinner() {
@@ -166,31 +152,6 @@ public class Kalah {
         }
     }
 
-    public String printBoard() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("\n");
-        sb.append("Board State:\n");
-        sb.append(printPits(player1.getPits()));
-        sb.append("\n");
-        sb.append("\t").append(player1.getKalah());
-        sb.append("\t\t\t\t\t\t\t").append(player2.getKalah());
-        sb.append("\n");
-        sb.append(printPits(player2.getPits()));
-        sb.append("\n");
-
-        return sb.toString();
-    }
-
-    private String printPits(Integer[] pits) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\t");
-        for (int i = 0; i < pits.length; i++) {
-            sb.append("\t").append(i).append(":").append(pits[i]);
-        }
-        return sb.toString();
-    }
-
     public Player whosTurn() {
         return whosTurn;
     }
@@ -201,6 +162,37 @@ public class Kalah {
 
     public Player getPlayerTwo() {
         return player2;
+    }
+
+
+    void switchPlayer() {
+        if (whosTurn.equals(player1)) {
+            whosTurn = player2;
+        } else {
+            whosTurn = player1;
+        }
+
+    }
+
+    String printBoard() {
+        return "\n" +
+                "Board State:\n" +
+                printPits(player1.getPits()) +
+                "\n" +
+                "\t" + player1.getKalah() +
+                "\t\t\t\t\t\t\t" + player2.getKalah() +
+                "\n" +
+                printPits(player2.getPits()) +
+                "\n";
+    }
+
+    private String printPits(Integer[] pits) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t");
+        for (int i = 0; i < pits.length; i++) {
+            sb.append("\t").append(i).append(":").append(pits[i]);
+        }
+        return sb.toString();
     }
 
 }
