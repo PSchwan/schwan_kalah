@@ -24,8 +24,7 @@ public class KalahController {
 
     @RequestMapping("/")
     public String welcome(Map<String, Object> model) {
-        System.out.println("hello world, " + this.message);
-        model.put("message", this.message);
+        kalah = new Kalah();
         return "welcome";
     }
 
@@ -36,21 +35,30 @@ public class KalahController {
         model.put("Player2Pits", kalah.getPlayerTwo().getPits());
         model.put("Player1Kalah", kalah.getPlayerOne().getKalah());
         model.put("Player2Kalah", kalah.getPlayerTwo().getKalah());
-        model.put("player1sTurn", kalah.whosTurn().getNumber() == 0);
-        model.put("player2sTurn", kalah.whosTurn().getNumber() == 1);
+
+        if (kalah.gameOver()) {
+            model.put("player1sTurn", false);
+            model.put("player2sTurn", false);
+            model.put("gameOver", true);
+            if(kalah.getWinner() == null) { // means the game ended a draw
+                model.put("draw", true);
+            } else {
+                model.put("draw", false);
+                model.put("winner", kalah.getWinner());
+            }
+        } else {
+            model.put("player1sTurn", kalah.whosTurn().getNumber() == 0);
+            model.put("player2sTurn", kalah.whosTurn().getNumber() == 1);
+        }
 
         return "gameScreen";
     }
 
     @RequestMapping(value = "move", method = RequestMethod.POST)
-    public String move(Map<String, Object> model, @RequestParam String move) {
+    public String move(@RequestParam String move) {
         try {
-            logger.info("move selected:" + move);
-            if (kalah.play(move)) {
-                return redirectToGame(); // todo: switch this to the game over screen!
-            } else {
-                return redirectToGame();
-            }
+            kalah.play(move);
+            return redirectToGame();
         } catch (InvalidMoveException e) {
             logger.error("Exception thrown! " + e.getLocalizedMessage(), e);
             return redirectToGame();

@@ -1,43 +1,22 @@
 <!DOCTYPE html>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 <head>
-
-    <!-- Access the bootstrap Css like this,
-        Spring boot will handle the resource mapping automcatically -->
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
-
-    <!--
-	<spring:url value="/css/main.css" var="springCss" />
-	<link href="${springCss}" rel="stylesheet" />
-	 -->
-    <c:url value="/css/main.css" var="jstlCss" />
-    <link href="${jstlCss}" rel="stylesheet" />
-
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <spring:url value="/css/main.css" var="springCss"/>
+    <c:url value="/css/main.css" var="jstlCss"/>
+    <link href="${jstlCss}" rel="stylesheet"/>
 </head>
-<body>
 
-<nav class="navbar navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Schwan Kalah</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/game">Game</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<body>
+<%@include file="includes/navigation.jsp" %>
 
 <div class="container">
 
     <div class="starter-template">
-        <h1>Schwan Kalah Game</h1>
-        <h2>Welcome to the game.</h2>
-        <p><a href="/game">Click here to go to the game screen</a></p>
+        <h3>A new game of Kalah has just been started</h3>
+        <p><a href="/game">Click here to start the game</a></p>
     </div>
 
 </div>

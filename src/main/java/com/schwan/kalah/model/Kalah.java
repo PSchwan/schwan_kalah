@@ -132,7 +132,7 @@ public class Kalah {
 
         System.out.println(printBoard());
 
-        if (player1.finished() || player2.finished()) {
+        if (gameOver()) {
             player1.tidyUp();
             player2.tidyUp();
             return true;
@@ -141,6 +141,10 @@ public class Kalah {
             return false;
         }
 
+    }
+
+    public boolean gameOver() {
+        return player1.finished() || player2.finished();
     }
 
     public void switchPlayer() {
