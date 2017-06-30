@@ -1,4 +1,5 @@
 package com.schwan.kalah.model;
+
 import com.schwan.kalah.exception.InvalidMoveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +13,8 @@ public class Kalah {
 
     public static final int GAME_TYPE_SIX_STONES = 6;
     public static final int NUMBER_OF_PITS = 6;
-    public static final int STONES_TO_START_IN_A_BIT = 6;
     public static final int DEFAULT_VALUE = -1000; // make it a number that'll never appear otherwise (-1 is the Kalah for one player...)
+
 
     protected Logger logger = LogManager.getLogger();
 
@@ -22,6 +23,11 @@ public class Kalah {
 
     protected Player whosTurn;
 
+    protected int startingStonesInAPit;
+
+    public Kalah() {
+        this(GAME_TYPE_SIX_STONES);
+    }
 
     public Kalah(int numberOfStones) {
         logger.debug("Starting a new game of Kalah with " + numberOfStones + " stones");
@@ -29,11 +35,13 @@ public class Kalah {
             case GAME_TYPE_SIX_STONES:
                 break;
             default:
-                throw new UnsupportedOperationException("This game only supports 6 stones");
+                throw new UnsupportedOperationException("This game only supports 6 stones currently");
         }
 
-        player1 = new Player("Player1", false);
-        player2 = new Player("Player2", true);
+        startingStonesInAPit = numberOfStones;
+
+        player1 = new Player(0, "Player1", false, startingStonesInAPit);
+        player2 = new Player(1, "Player2", true, startingStonesInAPit);
 
         Random random = new Random();
         if (random.nextBoolean()) {
@@ -74,7 +82,7 @@ public class Kalah {
         }
 
 
-        logger.info( playerWhosTurnItIs.getName() + " chose to sow at position " + pitToSow);
+        logger.info(playerWhosTurnItIs.getName() + " chose to sow at position " + pitToSow);
 
         playerWhosTurnItIs.sow(pitToSow);
         while (playerWhosTurnItIs.getUnassignedStones() > 0) {
@@ -103,8 +111,17 @@ public class Kalah {
 
     }
 
+    public boolean play(String original) throws  InvalidMoveException {
+        try {
+            int pitToSow = Integer.parseInt(original);
+            return play(pitToSow);
+        } catch (NumberFormatException e) {
+            //TODO: how to handle this?
+            return false; // currently just ignores it and returns - not brilliant, but lets the player try again
+        }
+    }
+
     /**
-     *
      * @param pitToSow the pit the next player has chosen
      * @return true if the game ended (someone finished) or false if it continues
      * @throws InvalidMoveException
@@ -127,7 +144,7 @@ public class Kalah {
     }
 
     public void switchPlayer() {
-        if(whosTurn.equals(player1)) {
+        if (whosTurn.equals(player1)) {
             whosTurn = player2;
         } else {
             whosTurn = player1;
@@ -168,6 +185,10 @@ public class Kalah {
             sb.append("\t").append(i).append(":").append(pits[i]);
         }
         return sb.toString();
+    }
+
+    public Player whosTurn() {
+        return whosTurn;
     }
 
     public Player getPlayerOne() {

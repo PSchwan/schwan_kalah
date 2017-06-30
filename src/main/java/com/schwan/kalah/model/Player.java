@@ -16,12 +16,14 @@ public class Player {
     private boolean moveForward = true;
     private int unassignedStones = 0;
     private int lastPitPlaced = Kalah.DEFAULT_VALUE;
+    private int number;
     private String name;
 
-    public Player(String name, boolean moveForward) {
+    public Player(int number, String name, boolean moveForward, int stonesInPit) {
+        this.number = number;
         this.name = name;
         for (int i = 0; i < pits.length; i++) {
-            pits[i] = Kalah.STONES_TO_START_IN_A_BIT;
+            pits[i] = stonesInPit;
         }
         kalah = 0;
         this.moveForward = moveForward;
@@ -143,6 +145,10 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
 }

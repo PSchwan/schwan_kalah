@@ -13,7 +13,7 @@ public class PlayerTest {
 
     @Before
     public void setUp() throws Exception {
-        player = new Player("testPlayer", true);
+        player = new Player("testPlayer", true, 6);
     }
 
     @Test
