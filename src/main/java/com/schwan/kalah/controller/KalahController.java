@@ -6,7 +6,6 @@ import com.schwan.kalah.exception.InvalidMoveException;
 import com.schwan.kalah.model.Kalah;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +22,7 @@ public class KalahController {
     private Kalah kalah = new Kalah();
 
     @RequestMapping("/")
-    public String welcome(Map<String, Object> model) {
+    public String welcome() {
         kalah = new Kalah();
         return "welcome";
     }
