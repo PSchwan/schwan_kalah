@@ -383,14 +383,82 @@ public class KalahTest {
     @Test
     public void play_swapsActivePlayerAfterATurn_1to2() throws Exception {
         kalah.whosTurn = kalah.player1;
-        assertFalse(kalah.play(3));
+        assertFalse(kalah.play(1));
         assertEquals(kalah.player2, kalah.whosTurn);
     }
 
     @Test
     public void play_swapsActivePlayerAfterATurn_2to1() throws Exception {
         kalah.whosTurn = kalah.player2;
-        assertFalse(kalah.play(3));
+        assertFalse(kalah.play(1));
+        assertEquals(kalah.player1, kalah.whosTurn);
+    }
+
+    @Test
+    public void play_doesntSwapActivePlayer_IfPlayerEndsInTheirKalah() throws Exception {
+
+        kalah.player2.pits[5] = 1;
+
+        kalah.whosTurn = kalah.player2;
+        assertFalse(kalah.play(5));
+
+        Integer[] playerOnePits = kalah.getPlayerOne().getPits();
+        assertEquals(0, kalah.getPlayerOne().getKalah());
+        assertEquals(6, playerOnePits.length);
+        assertEquals(6, playerOnePits[0].intValue());
+        assertEquals(6, playerOnePits[1].intValue());
+        assertEquals(6, playerOnePits[2].intValue());
+        assertEquals(6, playerOnePits[3].intValue());
+        assertEquals(6, playerOnePits[4].intValue());
+        assertEquals(6, playerOnePits[5].intValue());
+
+        Integer[] playerTwoPits = kalah.getPlayerTwo().getPits();
+        assertEquals(1, kalah.getPlayerTwo().getKalah());
+        assertEquals(6, playerTwoPits.length);
+        assertEquals(6, playerTwoPits[0].intValue());
+        assertEquals(6, playerTwoPits[1].intValue());
+        assertEquals(6, playerTwoPits[2].intValue());
+        assertEquals(6, playerTwoPits[3].intValue());
+        assertEquals(6, playerTwoPits[4].intValue());
+        assertEquals(0, playerTwoPits[5].intValue());
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+    }
+
+    /**
+     * They won't actually finish in the opponents kalah (as that's not possible), they'll finish in their
+     * own first pit.  But if there's an error in the code, they might finish in the opponents kalah, and
+     * that's basically what we're testing here.
+     */
+    @Test
+    public void play_swapsActivePlayer_IfPlayerEndsInOpponentsKalah() throws Exception {
+
+        kalah.player2.pits[5] = 8;
+
+        kalah.whosTurn = kalah.player2;
+        assertFalse(kalah.play(5));
+
+        Integer[] playerOnePits = kalah.getPlayerOne().getPits();
+        assertEquals(0, kalah.getPlayerOne().getKalah());
+        assertEquals(6, playerOnePits.length);
+        assertEquals(7, playerOnePits[0].intValue());
+        assertEquals(7, playerOnePits[1].intValue());
+        assertEquals(7, playerOnePits[2].intValue());
+        assertEquals(7, playerOnePits[3].intValue());
+        assertEquals(7, playerOnePits[4].intValue());
+        assertEquals(7, playerOnePits[5].intValue());
+
+        Integer[] playerTwoPits = kalah.getPlayerTwo().getPits();
+        assertEquals(1, kalah.getPlayerTwo().getKalah());
+        assertEquals(6, playerTwoPits.length);
+        assertEquals(7, playerTwoPits[0].intValue());
+        assertEquals(6, playerTwoPits[1].intValue());
+        assertEquals(6, playerTwoPits[2].intValue());
+        assertEquals(6, playerTwoPits[3].intValue());
+        assertEquals(6, playerTwoPits[4].intValue());
+        assertEquals(0, playerTwoPits[5].intValue());
+
+
         assertEquals(kalah.player1, kalah.whosTurn);
     }
 
@@ -399,53 +467,132 @@ public class KalahTest {
 
         kalah.whosTurn = kalah.player1;
 
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(0));
         assertFalse(kalah.play(5));
-        assertFalse(kalah.play(5));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(5));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(2));
-        assertFalse(kalah.play(2));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(5));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(2));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(5));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(2));
-        assertFalse(kalah.play(2));
-        assertFalse(kalah.play(5));
-        assertFalse(kalah.play(1));
-        assertFalse(kalah.play(4));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(3));
-        assertFalse(kalah.play(0));
-        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
         assertFalse(kalah.play(0));
 
-        assertTrue(kalah.play(2)); // finally the game ends (hence true instead of false)
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(0));
 
-        System.out.println(kalah.printBoard());
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(2));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(2));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(2));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(2));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(2));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(5));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(1));
+
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(4));
+        assertEquals(kalah.player2, kalah.whosTurn);
+        assertFalse(kalah.play(3));
+
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertFalse(kalah.play(0));
+        assertEquals(kalah.player1, kalah.whosTurn);
+        assertTrue(kalah.play(3)); // finally the game ends (hence true instead of false)
 
         Integer[] playerOnePits = kalah.getPlayerOne().getPits();
-        assertEquals(32, kalah.getPlayerOne().getKalah());
+        assertEquals(21, kalah.getPlayerOne().getKalah());
         assertEquals(6, playerOnePits.length);
         assertEquals(0, playerOnePits[0].intValue());
         assertEquals(0, playerOnePits[1].intValue());
@@ -455,7 +602,7 @@ public class KalahTest {
         assertEquals(0, playerOnePits[5].intValue());
 
         Integer[] playerTwoPits = kalah.getPlayerTwo().getPits();
-        assertEquals(40, kalah.getPlayerTwo().getKalah());
+        assertEquals(51, kalah.getPlayerTwo().getKalah());
         assertEquals(6, playerTwoPits.length);
         assertEquals(0, playerTwoPits[0].intValue());
         assertEquals(0, playerTwoPits[1].intValue());

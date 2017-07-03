@@ -8,16 +8,19 @@ import org.apache.logging.log4j.Logger;
  */
 public class Player {
 
-    protected Logger logger = LogManager.getLogger();
+    Logger logger = LogManager.getLogger();
 
-    protected Integer[] pits = new Integer[Kalah.NUMBER_OF_PITS];
+    private int number;
+    private String name;
+
+    Integer[] pits = new Integer[Kalah.NUMBER_OF_PITS];
     int kalah;
 
     private boolean moveForward = true;
     private int unassignedStones = 0;
+
     private int lastPitPlaced = Kalah.DEFAULT_VALUE;
-    private int number;
-    private String name;
+    private boolean endedInKalah = false;
 
     public Player(int number, String name, boolean moveForward, int stonesInPit) {
         this.number = number;
@@ -84,7 +87,7 @@ public class Player {
 
     protected int placeStones(int numberOfStonesToPlace, int pit, boolean includeKalah) {
         int numberOfStonesPlaced = 0;
-        logger.debug(name + "\tAiming to place " + numberOfStonesToPlace + " stones, starting at " + pit + ", kalah=" + includeKalah);
+        logger.debug(getName() + "\tAiming to place " + numberOfStonesToPlace + " stones, starting at " + pit + ", kalah=" + includeKalah);
 
         while (numberOfStonesToPlace > 0) {
 
@@ -92,11 +95,13 @@ public class Player {
                 kalah++;
                 numberOfStonesToPlace--;
                 numberOfStonesPlaced++;
+                endedInKalah = true;
                 logger.debug(name + "\tplaced stone in the kalah => Stones placed = " + numberOfStonesPlaced + ", number left = " + numberOfStonesToPlace);
             } else if (!exceededEnd(pit)) {
                 pits[pit]++;
                 numberOfStonesToPlace--;
                 numberOfStonesPlaced++;
+                endedInKalah = false;
                 logger.debug(name + "\tplaced stone in the pit[" + pit + "] => Stones placed = " + numberOfStonesPlaced + ", number left = " + numberOfStonesToPlace);
             } else {
                 break;
@@ -151,4 +156,17 @@ public class Player {
         return number;
     }
 
+    public boolean endInKalah() {
+        return endedInKalah;
+    }
+
+    public void reset() {
+        endedInKalah = false;
+        lastPitPlaced = Kalah.DEFAULT_VALUE;
+    }
+
+    @Override
+    public String toString() {
+        return "[Player " + getNumber() + ", name=" + getName() +  "]";
+    }
 }

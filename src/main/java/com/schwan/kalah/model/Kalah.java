@@ -70,14 +70,17 @@ public class Kalah {
 
         sow(whosTurn, pitToSow);
 
-        System.out.println(printBoard());
 
         if (gameOver()) {
             player1.tidyUp();
             player2.tidyUp();
+            System.out.println(printBoard());
             return true;
         } else {
-            switchPlayer();
+            if(!whosTurn.endInKalah()) {
+                switchPlayer();
+            }
+            System.out.println(printBoard());
             return false;
         }
 
@@ -92,6 +95,7 @@ public class Kalah {
         if (pitToSow < 0 || pitToSow >= NUMBER_OF_PITS) {
             throw new InvalidMoveException("Cannot sow with a pit of [" + pitToSow + "]");
         }
+
 
         if (player == player1) {
             playerWhosTurnItIs = player1;
@@ -109,6 +113,8 @@ public class Kalah {
 
         playerWhosTurnItIs.sow(pitToSow);
         while (playerWhosTurnItIs.getUnassignedStones() > 0) {
+            activePlayer.reset();
+            otherPlayer.reset();
             playerWhosTurnItIs.removeUnassignedStones(otherPlayer.placeStones(playerWhosTurnItIs.getUnassignedStones(), otherPlayer.movingForward() ? 0 : NUMBER_OF_PITS - 1, playerWhosTurnItIs.equals(otherPlayer)));
 
             if (activePlayer.equals(player1)) {
@@ -183,7 +189,7 @@ public class Kalah {
                 "\t\t\t\t\t\t\t" + player2.getKalah() +
                 "\n" +
                 printPits(player2.getPits()) +
-                "\n";
+                "\nIt is " + whosTurn.getName() + "'s turn";
     }
 
     private String printPits(Integer[] pits) {
