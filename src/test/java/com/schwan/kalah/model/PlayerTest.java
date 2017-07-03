@@ -17,12 +17,12 @@ public class PlayerTest {
     }
 
     @Test
-    public void outOfStones_correctAtStartOfGame() throws Exception {
+    public void outOfSeeds_correctAtStartOfGame() throws Exception {
         assertFalse(player.finished());
     }
 
     @Test
-    public void outOfStones_correctWhenOutOfStones() throws Exception {
+    public void outOfSeeds_correctWhenOutOfSeeds() throws Exception {
         player.pits[0] = 0;
         player.pits[1] = 0;
         player.pits[2] = 0;
@@ -34,7 +34,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void outOfStones_correctWhenSingleStoneLeft() throws Exception {
+    public void outOfSeeds_correctWhenSingleSeedLeft() throws Exception {
         player.pits[0] = 0;
         player.pits[1] = 0;
         player.pits[2] = 0;
@@ -46,7 +46,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void tidyUp_withStonesLeftInThePits() {
+    public void tidyUp_withSeedsLeftInThePits() {
         player.kalah = 3;
         player.pits[0] = 1;
         player.pits[1] = 2;
@@ -68,7 +68,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void tidyUp_withoutAnyStonesLeft() {
+    public void tidyUp_withoutAnySeedsLeft() {
         player.kalah = 4;
         player.pits[0] = 0;
         player.pits[1] = 0;

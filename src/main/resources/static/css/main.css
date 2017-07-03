@@ -1,9 +1,61 @@
-h1{
-    color:#0000FF;
+
+h1 {
+    color: #000000;
 }
 
-h2{
-    color:#FF0000;
+h2 {
+    color: #000000;
+}
+
+.pageheader h2, p, a {
+    color: #555555;
+    margin: 0;
+}
+
+.pageheader hr {
+    width: 90%;
+}
+
+.pageheader p {
+    font-size: 80%;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.board {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pit {
+    font-size: 100%;
+
+}
+
+.kalah {
+    font-size: 140%;
+}
+
+.player1 {
+    color: #233151;
+}
+
+.player1 button {
+    background-color: #93c5ff;
+}
+
+.player2 {
+    color: #28512b;
+}
+
+.player2 button {
+    background-color: #b7ffc6;
+}
+
+.won {
+    color: #ff0213;
+
 }
 
 th, td {

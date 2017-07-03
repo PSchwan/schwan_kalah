@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Controller covering all the endpoints related to the Kalah game
+ */
 @Controller
 public class KalahController {
 
     private Logger logger = LogManager.getLogger(KalahController.class);
 
-    private Kalah kalah = new Kalah();
+    private Kalah kalah = new Kalah(); // TODO:
 
     @Value("${welcome.message:test}")
     private String message = "Hello World";
@@ -40,7 +43,7 @@ public class KalahController {
             model.put("player1sTurn", false);
             model.put("player2sTurn", false);
             model.put("gameOver", true);
-            if(kalah.getWinner() == null) { // means the game ended a draw
+            if (kalah.getWinner() == null) { // means the game ended a draw
                 model.put("draw", true);
             } else {
                 model.put("draw", false);

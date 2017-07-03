@@ -15,7 +15,7 @@ public class KalahTest {
 
     @Before
     public void setUp() throws Exception {
-        kalah = new Kalah(Kalah.GAME_TYPE_SIX_STONES);
+        kalah = new Kalah(Kalah.GAME_TYPE_SIX_SEEDS);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class KalahTest {
     }
 
     @Test
-    public void sow_worksWhenPlacingLoadsOfStones() throws Exception {
+    public void sow_worksWhenPlacingLoadsOfSeeds() throws Exception {
 
         kalah.player1.pits[1] = 20;
         kalah.sow(kalah.getPlayerOne(), 1);
