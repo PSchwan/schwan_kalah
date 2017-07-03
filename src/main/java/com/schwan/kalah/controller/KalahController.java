@@ -20,10 +20,7 @@ public class KalahController {
 
     private Logger logger = LogManager.getLogger(KalahController.class);
 
-    private Kalah kalah = new Kalah(); // TODO:
-
-    @Value("${welcome.message:test}")
-    private String message = "Hello World";
+    private Kalah kalah = new Kalah();
 
     @RequestMapping("/")
     public String welcome(Map<String, Object> model) {
@@ -49,6 +46,7 @@ public class KalahController {
                 model.put("draw", false);
                 model.put("winner", kalah.getWinner());
             }
+
         } else {
             model.put("player1sTurn", kalah.whosTurn().getNumber() == 0);
             model.put("player2sTurn", kalah.whosTurn().getNumber() == 1);

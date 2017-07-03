@@ -39,8 +39,8 @@ public class Kalah {
                 throw new UnsupportedOperationException("This game only supports 6 seeds currently");
         }
 
-        player1 = new Player(0, "Player1", false, numberOfSeeds);
-        player2 = new Player(1, "Player2", true, numberOfSeeds);
+        player1 = new Player(0, "Player 1", false, numberOfSeeds);
+        player2 = new Player(1, "Player 2", true, numberOfSeeds);
 
         // decide who starts
         Random random = new Random();
@@ -60,8 +60,7 @@ public class Kalah {
      */
     public boolean play(String original) throws InvalidMoveException {
         try {
-            int pitToSow = Integer.parseInt(original);
-            return play(pitToSow);
+            return play(Integer.parseInt(original));
         } catch (NumberFormatException e) {
             logger.error("input string was invalid [input=" + original + "] " + e.getMessage(), e);
             return false; // currently just ignores it and returns - not brilliant, but lets the player try again

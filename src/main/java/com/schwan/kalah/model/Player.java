@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Class representing a player, including the pits and Kalah that the player owns
- *
+ * <p>
  * Created by Paul Schwan on 6/28/17.
  */
 public class Player {
@@ -63,7 +63,7 @@ public class Player {
      *
      * @param numberOfSeedsToPlace the total number of seeds to try and place
      * @param includeKalah         whether to include the players Kalah as a place to put the seeds or not
-     * @return
+     * @return the number of seeds the method managed to place
      */
     protected int placeSeeds(int numberOfSeedsToPlace, boolean includeKalah) {
         return placeSeeds(numberOfSeedsToPlace, movingForward() ? 0 : pits.length - 1, includeKalah);
@@ -75,7 +75,7 @@ public class Player {
      * @param numberOfSeedsToPlace the total number of seeds to try and place
      * @param pit                  the pit to start in
      * @param includeKalah         whether to include the players Kalah as a place to put the seeds or not
-     * @return
+     * @return the number of seeds the method managed to place
      */
     protected int placeSeeds(int numberOfSeedsToPlace, int pit, boolean includeKalah) {
         int numberOfSeedsPlaced = 0;
@@ -193,7 +193,7 @@ public class Player {
     }
 
     /**
-     * @return true if they finished a turn in the kalah, false if they didn't
+     * @return true if they finished the last turn in the kalah, false if they didn't
      */
     public boolean endInKalah() {
         return endedInKalah;

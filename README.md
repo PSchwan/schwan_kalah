@@ -1,10 +1,10 @@
 # schwan_kalah
 
-Implementation of the game Kalah ( https://en.wikipedia.org/wiki/Kalah )
+This is my implementation of 6-pit Kalah ( https://en.wikipedia.org/wiki/Kalah )
 
 ## Project Setup
 
-The project was developed on Java 1.8.0_65 with Gradle 3.4.1.  It should work with other, similar versions of both, but is untested.
+The project was developed on Java 1.8.0_65 with Gradle 3.4.1.  It should work with different versions, but hasn't been tested.
 
 Once the project is downloaded, build and test from the command line by running:
     `gradle clean build test`
